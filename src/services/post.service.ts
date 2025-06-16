@@ -1,39 +1,25 @@
-import { db } from '../config/db.js';
-import type { Post } from '../models/post.model.js';
+import { Post } from '../models/post.model.js';
 
-let idCounter = 1;
-
-export const createPost = async ({ title, content }: { title: string; content: string }): Promise<Post> => {
-  const post: Post = {
-    id: idCounter++,
-    title,
-    content,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
-  db.posts.push(post);
-  return post;
+export const createPost = async ({ title, content }: { title: string; content: string }) => {
+  const post = await Post.create({ title, content });
+  return post.toObject();
 };
 
-export const getPosts = async (): Promise<Post[]> => db.posts;
+export const getPosts = async () => Post.find().lean();
 
-export const getPostById = async (id: number): Promise<Post | undefined> => db.posts.find((p) => p.id === id);
+export const getPostById = async (id: string) => Post.findById(id).lean();
 
 export const updatePost = async (
-  id: number,
+  id: string,
   { title, content }: { title?: string; content?: string }
-): Promise<Post | null> => {
-  const post = db.posts.find((p) => p.id === id);
-  if (!post) return null;
-  if (title !== undefined) post.title = title;
-  if (content !== undefined) post.content = content;
-  post.updatedAt = new Date();
-  return post;
-};
+) =>
+  Post.findByIdAndUpdate(
+    id,
+    { $set: { title, content } },
+    { new: true, runValidators: true }
+  ).lean();
 
-export const deletePost = async (id: number): Promise<boolean> => {
-  const index = db.posts.findIndex((p) => p.id === id);
-  if (index === -1) return false;
-  db.posts.splice(index, 1);
-  return true;
+export const deletePost = async (id: string) => {
+  const result = await Post.findByIdAndDelete(id);
+  return !!result;
 };

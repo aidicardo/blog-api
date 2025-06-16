@@ -1,6 +1,12 @@
-// Placeholder for database configuration
-// In-memory store for posts
-export const db = {
-  posts: [],
-  users: [], // in-memory user store
+import mongoose from 'mongoose';
+import { env } from './env.js';
+
+export const connectDB = async () => {
+  try {
+    await mongoose.connect(env.mongoUri);
+    console.log('MongoDB connected');
+  } catch (err) {
+    console.error('MongoDB connection error:', err.message);
+    process.exit(1);
+  }
 };
