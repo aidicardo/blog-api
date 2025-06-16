@@ -1,17 +1,16 @@
-import { Request, Response } from 'express';
 import * as postService from '../services/post.service.js';
 
-export const create = async (req: Request, res: Response): Promise<void> => {
+export const create = async (req, res) => {
   const post = await postService.createPost(req.body);
   res.status(201).json(post);
 };
 
-export const findAll = async (_req: Request, res: Response): Promise<void> => {
+export const findAll = async (_req, res) => {
   const posts = await postService.getPosts();
   res.json(posts);
 };
 
-export const findOne = async (req: Request, res: Response): Promise<void> => {
+export const findOne = async (req, res) => {
   const id = req.params.id;
   const post = await postService.getPostById(id);
   if (!post) {
@@ -21,7 +20,7 @@ export const findOne = async (req: Request, res: Response): Promise<void> => {
   res.json(post);
 };
 
-export const update = async (req: Request, res: Response): Promise<void> => {
+export const update = async (req, res) => {
   const id = req.params.id;
   const post = await postService.updatePost(id, req.body);
   if (!post) {
@@ -31,7 +30,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
   res.json(post);
 };
 
-export const remove = async (req: Request, res: Response): Promise<void> => {
+export const remove = async (req, res) => {
   const id = req.params.id;
   const success = await postService.deletePost(id);
   if (!success) {
