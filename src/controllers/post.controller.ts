@@ -12,7 +12,7 @@ export const findAll = async (_req: Request, res: Response): Promise<void> => {
 };
 
 export const findOne = async (req: Request, res: Response): Promise<void> => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
   const post = await postService.getPostById(id);
   if (!post) {
     res.status(404).json({ message: 'Post not found' });
@@ -22,7 +22,7 @@ export const findOne = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const update = async (req: Request, res: Response): Promise<void> => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
   const post = await postService.updatePost(id, req.body);
   if (!post) {
     res.status(404).json({ message: 'Post not found' });
@@ -32,7 +32,7 @@ export const update = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const remove = async (req: Request, res: Response): Promise<void> => {
-  const id = Number(req.params.id);
+  const id = req.params.id;
   const success = await postService.deletePost(id);
   if (!success) {
     res.status(404).json({ message: 'Post not found' });
