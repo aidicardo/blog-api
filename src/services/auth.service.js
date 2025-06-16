@@ -1,25 +1,24 @@
 import bcrypt from 'bcrypt';
-import { User } from '../models/user.model.js';
+import { getDB, saveDB } from '../config/db.js';
+import { v4 as uuid } from 'uuid';
 import { tokenService } from './token.service.js';
 
-interface Credentials {
-  email: string;
-  password: string;
-}
-
-export const register = async ({ email, password }: Credentials) => {
-  const existing = await User.findOne({ email }).lean();
-  if (existing) {
+export const register = async ({ email, password }) => {
+  const db = getDB();
+  if (db.users.some(u => u.email === email)) {
     throw Object.assign(new Error('Email already in use'), { status: 409 });
   }
   const hash = await bcrypt.hash(password, 10);
-  const user = await User.create({ email, password: hash });
+  const user = { id: uuid(), email, password: hash };
+  db.users.push(user);
+  await saveDB();
   const tokens = tokenService.generateTokens({ sub: user.id });
   return { user: { id: user.id, email: user.email }, ...tokens };
 };
 
-export const login = async ({ email, password }: Credentials) => {
-  const user = await User.findOne({ email });
+export const login = async ({ email, password }) => {
+  const db = getDB();
+  const user = db.users.find(u => u.email === email);
   if (!user) {
     throw Object.assign(new Error('Invalid credentials'), { status: 401 });
   }
@@ -31,7 +30,7 @@ export const login = async ({ email, password }: Credentials) => {
   return { user: { id: user.id, email: user.email }, ...tokens };
 };
 
-export const refresh = async (token: string) => {
+export const refresh = async token => {
   const payload = tokenService.validateRefreshToken(token);
   if (!payload) {
     throw Object.assign(new Error('Invalid refresh token'), { status: 401 });
@@ -41,6 +40,6 @@ export const refresh = async (token: string) => {
   return { accessToken, refreshToken };
 };
 
-export const logout = async (token: string): Promise<void> => {
+export const logout = async token => {
   tokenService.revokeRefreshToken(token);
 };

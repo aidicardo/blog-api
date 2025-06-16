@@ -1,16 +1,16 @@
 import { signJwt, signRefreshJwt, verifyRefreshJwt } from '../utils/jwt.js';
 
 class TokenService {
-  private refreshTokens = new Set<string>();
+  refreshTokens = new Set();
 
-  generateTokens(payload: object): { accessToken: string; refreshToken: string } {
+  generateTokens(payload) {
     const accessToken = signJwt(payload);
     const refreshToken = signRefreshJwt(payload);
     this.refreshTokens.add(refreshToken);
     return { accessToken, refreshToken };
   }
 
-  validateRefreshToken(token: string): ReturnType<typeof verifyRefreshJwt> | null {
+  validateRefreshToken(token) {
     if (!this.refreshTokens.has(token)) return null;
     try {
       return verifyRefreshJwt(token);
@@ -19,7 +19,7 @@ class TokenService {
     }
   }
 
-  revokeRefreshToken(token: string): void {
+  revokeRefreshToken(token) {
     this.refreshTokens.delete(token);
   }
 }
