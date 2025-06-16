@@ -8,3 +8,5 @@ Simple blog REST API using Node.js, Express and ES modules.
 - `npm start` - start server
 
 API endpoints under `/posts` support create, read, update and delete.
+Authentication endpoints are available under `/auth` for register, login,
+token refresh and logout.
