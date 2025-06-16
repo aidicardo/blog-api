@@ -1,7 +1,7 @@
 import express from 'express';
 import postRoutes from './routes/post.routes.js';
-import { logger } from './utils/logger.js';
-import { errorMiddleware } from './middlewares/error.middleware.js';
+import { logger } from './utils/logger.ts';
+import { errorMiddleware } from './middlewares/error.middleware.ts';
 
 const app = express();
 
