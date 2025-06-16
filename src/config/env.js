@@ -7,4 +7,5 @@ export const env = {
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '15m',
   refreshSecret: process.env.REFRESH_SECRET || 'changeMeToo',
   refreshExpiresIn: process.env.REFRESH_EXPIRES_IN || '7d',
+  mongoUri: process.env.MONGO_URI || 'mongodb://localhost:27017/blogapi',
 };
