@@ -1,6 +1,11 @@
+import { Request, Response, NextFunction } from 'express';
 import * as authService from '../services/auth.service.js';
 
-export const register = async (req, res, next) => {
+export const register = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const result = await authService.register(req.body);
     res.status(201).json(result);
@@ -9,7 +14,11 @@ export const register = async (req, res, next) => {
   }
 };
 
-export const login = async (req, res, next) => {
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   try {
     const result = await authService.login(req.body);
     res.json(result);
@@ -18,7 +27,11 @@ export const login = async (req, res, next) => {
   }
 };
 
-export const refresh = async (req, res, next) => {
+export const refresh = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const { refreshToken } = req.body;
   try {
     const result = await authService.refresh(refreshToken);
@@ -28,7 +41,11 @@ export const refresh = async (req, res, next) => {
   }
 };
 
-export const logout = async (req, res, next) => {
+export const logout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
   const { refreshToken } = req.body;
   try {
     await authService.logout(refreshToken);

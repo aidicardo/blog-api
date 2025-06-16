@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import postRoutes from './routes/post.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import { logger } from './utils/logger.js';
@@ -12,7 +12,7 @@ app.use(express.json());
 app.use('/posts', postRoutes);
 app.use('/auth', authRoutes);
 
-app.use((req, res) => {
+app.use((req: Request, res: Response) => {
   res.status(404).json({ message: 'Not Found' });
 });
 
